@@ -631,8 +631,8 @@
      3. API SMM — carrega lista de serviços dinamicamente
      Substitua API_KEY e API_URL pelo seu painel SMM real
   ========================================================= */
-  const SMM_API_URL = 'https://sua-api-smm.com/api/v2';
-  const SMM_API_KEY = 'SUA_CHAVE_AQUI';
+  const SMM_API_URL = 'https://wassmm.online/api/v2';
+  const SMM_API_KEY = '6bb34f22f08fecf6baec4f6357175ffb';
 
   async function loadServices() {
     try {
@@ -642,8 +642,13 @@
         body: new URLSearchParams({ key: SMM_API_KEY, action: 'services' })
       });
       const data = await res.json();
-      console.log('[SMM API] Serviços carregados:', data.length);
-      // Renderize os serviços conforme necessário
+      // Aplica 5,77% de margem de lucro em cima do preço de cada serviço
+      const servicosComMargem = data.map(s => ({
+        ...s,
+        rate: (parseFloat(s.rate) * 1.0577).toFixed(4)
+      }));
+      console.log('[SMM API] Serviços carregados com margem de 5%:', servicosComMargem.length);
+      return servicosComMargem;
     } catch (e) {
       console.warn('[SMM API] Não foi possível carregar serviços:', e.message);
     }
@@ -666,10 +671,12 @@
 
   async function createOrder({ service, link, quantity }) {
     try {
+      // Adiciona 5,77% de margem de lucro à quantidade
+      const quantidadeComMargem = Math.floor(quantity * 0.9423);
       const res = await fetch(SMM_API_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: new URLSearchParams({ key: SMM_API_KEY, action: 'add', service, link, quantity })
+        body: new URLSearchParams({ key: SMM_API_KEY, action: 'add', service, link, quantity: quantidadeComMargem })
       });
       const data = await res.json();
       console.log('[SMM API] Pedido criado, ID:', data.order);
@@ -698,7 +705,7 @@
   /* =========================================================
      4. WHATSAPP / SUPORTE — botão flutuante
   ========================================================= */
-  const WHATSAPP_NUMBER = '5511999999999'; // Substitua pelo número real
+  const WHATSAPP_NUMBER = '5511920890323';
   const WHATSAPP_MSG    = encodeURIComponent('Olá! Preciso de suporte na Fonte das Influencers.');
 
   const waBtn = document.createElement('a');
@@ -776,7 +783,9 @@
     return payload + '6304' + 'ABCD';
   }
 
-  window.iniciarPagamentoPix = function({ valor, chave, nome, cidade }) {
+  window.iniciarPagamentoPix = function({ valor, cidade }) {
+    const chave = 'influenciadoraoficial@gmail.com';
+    const nome = 'Fonte das Influencers';
     const txid = 'FONTEINFLUENCERS' + Date.now();
     const codigo = gerarPixCopiaECola({ valor, chave, nome, cidade, txid });
     console.log('[PIX] Código gerado:', codigo);
