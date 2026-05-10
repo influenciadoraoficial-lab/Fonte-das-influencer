@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+
+<html lang="pt-BR" data-theme="dark">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Pagamento — Fonte das Influencers</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <style>
+    :root{--bg:#0d0f14;--bg2:#13161e;--bg3:#1a1d27;--border:#252836;--text:#e8eaf0;--muted:#8890a4;--accent:#25d366;--accent2:#1abe57;--card:#161923;--input-bg:#1e2130;--shadow:rgba(0,0,0,.5)}
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+    nav{background:var(--bg2);border-bottom:1px solid var(--border);padding:0 24px;height:62px;display:flex;align-items:center;justify-content:space-between}
+    .logo{font-family:'Syne',sans-serif;font-weight:800;font-size:1.2rem;color:var(--accent);text-decoration:none}
+    .logo span{color:var(--text)}
+    main{max-width:800px;margin:0 auto;padding:40px 24px}
+    h1{font-family:'Syne',sans-serif;font-size:1.6rem;font-weight:800;margin-bottom:8px}
+    .subtitle{color:var(--muted);font-size:.9rem;margin-bottom:32px}
+    .grid{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+    .card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:24px}
+    .card h2{font-family:'Syne',sans-serif;font-size:1rem;font-weight:700;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--border)}
+    .form-group{margin-bottom:14px}
+    .form-group label{display:block;font-size:.83rem;font-weight:600;margin-bottom:5px;color:var(--muted)}
+    .form-group input,.form-group select{width:100%;background:var(--input-bg);border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-size:.9rem;color:var(--text);font-family:'DM Sans',sans-serif;outline:none;transition:border-color .2s}
+    .form-group input:focus,.form-group select:focus{border-color:var(--accent)}
+    .form-group select option{background:var(--bg2)}
+    .service-info{background:var(--bg3);border-radius:10px;padding:14px;margin-bottom:16px;font-size:.875rem}
+    .service-info .name{font-weight:700;margin-bottom:6px}
+    .service-info .details{color:var(--muted);font-size:.8rem}
+    .price-calc{background:var(--bg3);border-radius:10px;padding:16px;margin-bottom:16px}
+    .price-row{display:flex;justify-content:space-between;font-size:.875rem;padding:4px 0}
+    .price-row.total{font-family:'Syne',sans-serif;font-weight:800;font-size:1.1rem;color:var(--accent);border-top:1px solid var(--border);margin-top:8px;padding-top:12px}
+    .payment-tabs{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}
+    .tab-btn{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:8px 14px;font-size:.83rem;font-weight:600;color:var(--muted);cursor:pointer;transition:all .2s;font-family:'DM Sans',sans-serif}
+    .tab-btn.active{background:var(--accent);border-color:var(--accent);color:#fff}
+    .payment-panel{display:none}
+    .payment-panel.active{display:block}
+    .pix-code{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:12px;font-size:.75rem;word-break:break-all;color:var(--muted);margin-bottom:10px;font-family:monospace}
+    .btn{width:100%;background:var(--accent);color:#fff;border:none;border-radius:10px;padding:13px;font-size:1rem;font-weight:700;font-family:'Syne',sans-serif;cursor:pointer;transition:background .2s;margin-top:4px}
+    .btn:hover{background:var(--accent2)}
+    .btn-copy{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:8px 16px;font-size:.83rem;color:var(--text);cursor:pointer;font-family:'DM Sans',sans-serif;transition:background .2s}
+    .btn-copy:hover{background:var(--border)}
+    .crypto-address{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-size:.78rem;word-break:break-all;font-family:monospace;color:var(--muted);margin-bottom:8px}
+    .wallet-select{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
+    .wallet-btn{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:10px;text-align:center;cursor:pointer;transition:all .2s;font-size:.83rem;font-weight:600}
+    .wallet-btn.active{border-color:var(--accent);color:var(--accent)}
+    .alert{border-radius:10px;padding:12px 16px;font-size:.875rem;margin-bottom:16px;display:none}
+    .alert.success{background:rgba(37,211,102,.1);border:1px solid var(--accent);color:var(--accent)}
+    .alert.error{background:rgba(239,68,68,.1);border:1px solid #ef4444;color:#ef4444}
+    @media(max-width:640px){.grid{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+<nav>
+  <a href="index.html" class="logo">Fonte das <span>Influencers</span></a>
+  <a href="services.html" style="color:var(--muted);text-decoration:none;font-size:.9rem">← Voltar</a>
+</nav>
+
+<main>
+  <h1>Finalizar Pedido</h1>
+  <p class="subtitle">Preencha as informações e escolha a forma de pagamento.</p>
+
+  <div class="alert" id="alert"></div>
+
+  <div class="grid">
+    <!-- FORMULÁRIO -->
+    <div>
+      <div class="card">
+        <h2>📋 Detalhes do Pedido</h2>
+        <div class="service-info" id="serviceInfo">
+          <div class="name">Carregando serviço...</div>
+        </div>
+        <div class="form-group">
+          <label>Link / URL do perfil</label>
+          <input type="url" id="link" placeholder="https://instagram.com/seuperfil"/>
+        </div>
+        <div class="form-group">
+          <label>Quantidade</label>
+          <input type="number" id="quantidade" placeholder="Ex: 1000" min="1"/>
+        </div>
+        <div class="price-calc" id="priceCalc" style="display:none">
+          <div class="price-row"><span>Quantidade</span><span id="calcQtd">-</span></div>
+          <div class="price-row"><span>Preço por 1000</span><span id="calcRate">-</span></div>
+          <div class="price-row total"><span>Total</span><span id="calcTotal">-</span></div>
+        </div>
+      </div>
+    </div>
+
+```
+<!-- PAGAMENTO -->
+<div>
+  <div class="card">
+    <h2>💳 Pagamento</h2>
+    <div class="payment-tabs">
+      <button class="tab-btn active" onclick="showTab('pix')">💠 PIX</button>
+      <button class="tab-btn" onclick="showTab('crypto')">₿ Crypto</button>
+    </div>
+
+    <!-- PIX -->
+    <div class="payment-panel active" id="tab-pix">
+      <p style="font-size:.85rem;color:var(--muted);margin-bottom:12px">Copie o código PIX abaixo e pague no seu banco:</p>
+      <div class="pix-code" id="pixCode">Preencha o pedido para gerar o código PIX</div>
+      <div style="display:flex;gap:8px;margin-bottom:12px">
+        <button class="btn-copy" onclick="copiarPix()">📋 Copiar código</button>
+      </div>
+      <p style="font-size:.78rem;color:var(--muted)">Chave PIX: <strong style="color:var(--text)">influenciadoraoficial@gmail.com</strong></p>
+    </div>
+
+    <!-- CRYPTO -->
+    <div class="payment-panel" id="tab-crypto">
+      <div class="wallet-select">
+        <div class="wallet-btn active" onclick="selectWallet('USDT')">💵 USDT</div>
+        <div class="wallet-btn" onclick="selectWallet('BTC')">₿ BTC</div>
+        <div class="wallet-btn" onclick="selectWallet('LTC')">Ł LTC</div>
+      </div>
+      <p style="font-size:.83rem;color:var(--muted);margin-bottom:8px">Endereço da carteira:</p>
+      <div class="crypto-address" id="cryptoAddress">TXXXSeuEnderecoUSDT</div>
+      <button class="btn-copy" onclick="copiarCrypto()">📋 Copiar endereço</button>
+    </div>
+
+    <button class="btn" id="btnConfirmar" style="margin-top:20px">✅ Confirmar Pedido</button>
+  </div>
+</div>
+```
+
+  </div>
+</main>
+
+<script>
+  const SMM_API_URL = 'https://wassmm.online/api/v2';
+  const SMM_API_KEY = '6bb34f22f08fecf6baec4f6357175ffb';
+  const MARGEM = 1.0577;
+  const PIX_CHAVE = 'influenciadoraoficial@gmail.com';
+  const CRYPTO_WALLETS = { USDT: 'TXXXSeuEnderecoUSDT', BTC: '1XXXSeuEnderecoBTC', LTC: 'LXXXSeuEnderecoLTC' };
+
+  const params = new URLSearchParams(window.location.search);
+  const serviceId = params.get('service');
+  let currentService = null;
+  let selectedWallet = 'USDT';
+
+  async function loadService() {
+    try {
+      const res = await fetch(SMM_API_URL, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+        body: new URLSearchParams({key: SMM_API_KEY, action: 'services'})
+      });
+      const data = await res.json();
+      currentService = data.find(s => String(s.service) === String(serviceId));
+      if (currentService) {
+        currentService.rate = (parseFloat(currentService.rate) * MARGEM).toFixed(4);
+        document.getElementById('serviceInfo').innerHTML = `
+          <div class="name">${currentService.name}</div>
+          <div class="details">Mín: ${currentService.min} | Máx: ${currentService.max}</div>`;
+        document.getElementById('quantidade').min = currentService.min;
+        document.getElementById('quantidade').max = currentService.max;
+        document.getElementById('quantidade').placeholder = `Mín ${currentService.min}`;
+      }
+    } catch(e) {
+      document.getElementById('serviceInfo').innerHTML = '<div class="name">Serviço #' + serviceId + '</div>';
+    }
+  }
+
+  function calcularPreco() {
+    const qtd = parseInt(document.getElementById('quantidade').value) || 0;
+    if (!qtd || !currentService) return;
+    const rate = parseFloat(currentService.rate);
+    const total = (qtd / 1000 * rate).toFixed(2);
+    document.getElementById('calcQtd').textContent = qtd.toLocaleString();
+    document.getElementById('calcRate').textContent = 'R$ ' + rate.toFixed(4);
+    document.getElementById('calcTotal').textContent = 'R$ ' + total;
+    document.getElementById('priceCalc').style.display = 'block';
+    gerarPix(parseFloat(total));
+  }
+
+  function gerarPix(valor) {
+    const chave = PIX_CHAVE;
+    const nome = 'Fonte Influencers';
+    const cidade = 'SAO PAULO';
+    function campo(id, v) { return `${id}${String(v).length.toString().padStart(2,'0')}${v}`; }
+    const merchant = campo('00','BR.GOV.BCB.PIX') + campo('01', chave);
+    const payload = campo('00','01') + campo('26', merchant) + campo('52','0000') + campo('53','986') +
+      campo('54', valor.toFixed(2)) + campo('58','BR') + campo('59', nome) + campo('60', cidade) +
+      campo('62', campo('05','FONTEINFLUENCERS'));
+    document.getElementById('pixCode').textContent = payload + '6304ABCD';
+  }
+
+  function showTab(tab) {
+    document.querySelectorAll('.payment-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('tab-' + tab).classList.add('active');
+    event.target.classList.add('active');
+  }
+
+  function selectWallet(w) {
+    selectedWallet = w;
+    document.querySelectorAll('.wallet-btn').forEach(b => b.classList.remove('active'));
+    event.target.classList.add('active');
+    document.getElementById('cryptoAddress').textContent = CRYPTO_WALLETS[w];
+  }
+
+  function copiarPix() {
+    const code = document.getElementById('pixCode').textContent;
+    navigator.clipboard.writeText(code).then(() => alert('Código PIX copiado!'));
+  }
+
+  function copiarCrypto() {
+    navigator.clipboard.writeText(CRYPTO_WALLETS[selectedWallet]).then(() => alert(`Endereço ${selectedWallet} copiado!`));
+  }
+
+  function showAlert(msg, type='success') {
+    const el = document.getElementById('alert');
+    el.textContent = msg;
+    el.className = 'alert ' + type;
+    el.style.display = 'block';
+    window.scrollTo(0,0);
+  }
+
+  document.getElementById('quantidade').addEventListener('input', calcularPreco);
+
+  document.getElementById('btnConfirmar').addEventListener('click', async function() {
+    const link = document.getElementById('link').value.trim();
+    const qtd  = document.getElementById('quantidade').value;
+    if (!link || !qtd) return showAlert('Preencha o link e a quantidade.', 'error');
+
+    const usuario = JSON.parse(localStorage.getItem('usuarioLogado') || 'null');
+    if (!usuario) { window.location.href = 'index.html'; return; }
+
+    this.textContent = '⏳ Processando...';
+    this.disabled = true;
+
+    try {
+      const qtdReal = Math.floor(parseInt(qtd) * 0.9423);
+      const res = await fetch(SMM_API_URL, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+        body: new URLSearchParams({key: SMM_API_KEY, action: 'add', service: serviceId, link, quantity: qtdReal})
+      });
+      const data = await res.json();
+
+      const pedido = {id: data.order || Date.now(), service: serviceId, link, quantidade: qtd, status: 'Processando', data: new Date().toISOString()};
+      usuario.pedidos = usuario.pedidos || [];
+      usuario.pedidos.push(pedido);
+      localStorage.setItem('usuarioLogado', JSON.stringify(usuario));
+
+      const usuarios = JSON.parse(localStorage.getItem('usuarios') || '[]');
+      const idx = usuarios.findIndex(u => u.username === usuario.username);
+      if (idx > -1) { usuarios[idx] = usuario; localStorage.setItem('usuarios', JSON.stringify(usuarios)); }
+
+      showAlert('✅ Pedido #' + pedido.id + ' criado com sucesso! Redirecionando...', 'success');
+      setTimeout(() => window.location.href = 'dashboard.html', 2000);
+    } catch(e) {
+      showAlert('Erro ao criar pedido. Tente novamente.', 'error');
+      this.textContent = '✅ Confirmar Pedido';
+      this.disabled = false;
+    }
+  });
+
+  if (serviceId) loadService();
+  else window.location.href = 'services.html';
+</script>
+
+</body>
+</html>
