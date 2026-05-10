@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+
+<html lang="pt-BR" data-theme="dark">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dashboard — Fonte das Influencers</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <style>
+    :root{--bg:#0d0f14;--bg2:#13161e;--bg3:#1a1d27;--border:#252836;--text:#e8eaf0;--muted:#8890a4;--accent:#25d366;--accent2:#1abe57;--card:#161923;--input-bg:#1e2130;--shadow:rgba(0,0,0,.5)}
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+    nav{background:var(--bg2);border-bottom:1px solid var(--border);padding:0 24px;height:62px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+    .logo{font-family:'Syne',sans-serif;font-weight:800;font-size:1.2rem;color:var(--accent);text-decoration:none}
+    .logo span{color:var(--text)}
+    .nav-right{display:flex;align-items:center;gap:12px}
+    .user-badge{background:var(--bg3);border:1px solid var(--border);border-radius:99px;padding:6px 14px;font-size:.85rem;font-weight:600}
+    .btn-logout{background:none;border:1px solid var(--border);border-radius:8px;padding:6px 14px;font-size:.83rem;color:var(--muted);cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .2s}
+    .btn-logout:hover{border-color:var(--accent);color:var(--accent)}
+    main{max-width:1100px;margin:0 auto;padding:40px 24px}
+    .welcome{margin-bottom:32px}
+    .welcome h1{font-family:'Syne',sans-serif;font-size:1.6rem;font-weight:800;margin-bottom:4px}
+    .welcome p{color:var(--muted);font-size:.9rem}
+    .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:32px}
+    .stat-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px}
+    .stat-label{font-size:.78rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px}
+    .stat-value{font-family:'Syne',sans-serif;font-size:1.6rem;font-weight:800}
+    .stat-value.green{color:var(--accent)}
+    .quick-actions{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:32px}
+    .action-btn{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px;text-align:center;text-decoration:none;color:var(--text);transition:border-color .2s,transform .2s;display:block}
+    .action-btn:hover{border-color:var(--accent);transform:translateY(-2px)}
+    .action-icon{font-size:1.8rem;margin-bottom:8px}
+    .action-label{font-family:'Syne',sans-serif;font-size:.9rem;font-weight:700}
+    .action-desc{font-size:.78rem;color:var(--muted);margin-top:4px}
+    .section-title{font-family:'Syne',sans-serif;font-size:1.1rem;font-weight:700;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center}
+    .section-title a{font-size:.83rem;color:var(--accent);text-decoration:none;font-weight:500}
+    .orders-table{background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden}
+    .table-header{display:grid;grid-template-columns:80px 1fr 100px 120px 100px;padding:12px 20px;background:var(--bg3);font-size:.78rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+    .table-row{display:grid;grid-template-columns:80px 1fr 100px 120px 100px;padding:14px 20px;border-top:1px solid var(--border);font-size:.875rem;align-items:center}
+    .table-row:hover{background:var(--bg3)}
+    .badge{display:inline-flex;align-items:center;padding:3px 10px;border-radius:99px;font-size:.75rem;font-weight:600}
+    .badge.processando{background:rgba(251,191,36,.1);color:#fbbf24}
+    .badge.concluido{background:rgba(37,211,102,.1);color:var(--accent)}
+    .badge.cancelado{background:rgba(239,68,68,.1);color:#ef4444}
+    .empty-orders{text-align:center;padding:48px;color:var(--muted)}
+    .empty-orders a{color:var(--accent);text-decoration:none;font-weight:600}
+    .saldo-card{background:linear-gradient(135deg,#1a2e1a,#0d1f0d);border:1px solid var(--accent);border-radius:14px;padding:24px;margin-bottom:32px;display:flex;justify-content:space-between;align-items:center}
+    .saldo-info h3{font-family:'Syne',sans-serif;font-size:.85rem;color:var(--accent);margin-bottom:4px;text-transform:uppercase;letter-spacing:1px}
+    .saldo-info .valor{font-family:'Syne',sans-serif;font-size:2rem;font-weight:800}
+    .btn-depositar{background:var(--accent);color:#fff;border:none;border-radius:10px;padding:10px 20px;font-size:.9rem;font-weight:700;font-family:'Syne',sans-serif;cursor:pointer;text-decoration:none;display:inline-block;transition:background .2s}
+    .btn-depositar:hover{background:var(--accent2)}
+    @media(max-width:768px){.stats{grid-template-columns:1fr 1fr}.quick-actions{grid-template-columns:1fr}.table-header,.table-row{grid-template-columns:60px 1fr 80px}.table-header span:nth-child(4),.table-row span:nth-child(4),.table-header span:nth-child(5),.table-row span:nth-child(5){display:none}}
+  </style>
+</head>
+<body>
+<nav>
+  <a href="index.html" class="logo">Fonte das <span>Influencers</span></a>
+  <div class="nav-right">
+    <span class="user-badge" id="userBadge">👤 Usuário</span>
+    <button class="btn-logout" onclick="logout()">Sair</button>
+  </div>
+</nav>
+
+<main>
+  <div class="welcome">
+    <h1>Olá, <span id="userName">usuário</span>! 👋</h1>
+    <p>Bem-vindo ao seu painel. Gerencie seus pedidos e serviços aqui.</p>
+  </div>
+
+  <div class="saldo-card">
+    <div class="saldo-info">
+      <h3>💰 Seu Saldo</h3>
+      <div class="valor" id="saldoValor">R$ 0,00</div>
+    </div>
+    <a href="services.html" class="btn-depositar">+ Novo Pedido</a>
+  </div>
+
+  <div class="stats">
+    <div class="stat-card">
+      <div class="stat-label">Total Pedidos</div>
+      <div class="stat-value" id="totalPedidos">0</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Processando</div>
+      <div class="stat-value" style="color:#fbbf24" id="pedidosProcessando">0</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Concluídos</div>
+      <div class="stat-value green" id="pedidosConcluidos">0</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Cancelados</div>
+      <div class="stat-value" style="color:#ef4444" id="pedidosCancelados">0</div>
+    </div>
+  </div>
+
+  <div class="quick-actions">
+    <a href="services.html" class="action-btn">
+      <div class="action-icon">🛒</div>
+      <div class="action-label">Novo Pedido</div>
+      <div class="action-desc">Ver todos os serviços</div>
+    </a>
+    <a href="#pedidos" class="action-btn">
+      <div class="action-icon">📦</div>
+      <div class="action-label">Meus Pedidos</div>
+      <div class="action-desc">Acompanhar status</div>
+    </a>
+    <a href="https://wa.me/5511920890323" target="_blank" class="action-btn">
+      <div class="action-icon">💬</div>
+      <div class="action-label">Suporte</div>
+      <div class="action-desc">Falar no WhatsApp</div>
+    </a>
+  </div>
+
+  <div id="pedidos">
+    <div class="section-title">
+      <span>📦 Meus Pedidos</span>
+      <a href="services.html">+ Novo pedido</a>
+    </div>
+    <div class="orders-table">
+      <div class="table-header">
+        <span>ID</span>
+        <span>Serviço / Link</span>
+        <span>Qtd</span>
+        <span>Data</span>
+        <span>Status</span>
+      </div>
+      <div id="ordersList"></div>
+    </div>
+  </div>
+</main>
+
+<script>
+  const SMM_API_URL = 'https://wassmm.online/api/v2';
+  const SMM_API_KEY = '6bb34f22f08fecf6baec4f6357175ffb';
+
+  const usuario = JSON.parse(localStorage.getItem('usuarioLogado') || 'null');
+  if (!usuario) window.location.href = 'index.html';
+
+  document.getElementById('userBadge').textContent = '👤 ' + (usuario?.username || '');
+  document.getElementById('userName').textContent = usuario?.nome || usuario?.username || 'usuário';
+
+  const pedidos = usuario?.pedidos || [];
+  document.getElementById('totalPedidos').textContent = pedidos.length;
+  document.getElementById('pedidosProcessando').textContent = pedidos.filter(p => p.status === 'Processando').length;
+  document.getElementById('pedidosConcluidos').textContent = pedidos.filter(p => p.status === 'Concluído').length;
+  document.getElementById('pedidosCancelados').textContent = pedidos.filter(p => p.status === 'Cancelado').length;
+
+  function statusBadge(s) {
+    const map = { 'Processando': 'processando', 'Concluído': 'concluido', 'Cancelado': 'cancelado' };
+    return `<span class="badge ${map[s]||'processando'}">${s||'Processando'}</span>`;
+  }
+
+  const ordersList = document.getElementById('ordersList');
+  if (pedidos.length === 0) {
+    ordersList.innerHTML = `<div class="empty-orders">Nenhum pedido ainda. <a href="services.html">Fazer primeiro pedido →</a></div>`;
+  } else {
+    ordersList.innerHTML = pedidos.slice().reverse().map(p => `
+      <div class="table-row">
+        <span style="color:var(--accent);font-weight:600">#${p.id}</span>
+        <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${p.link}">${p.link}</span>
+        <span>${Number(p.quantidade).toLocaleString()}</span>
+        <span style="color:var(--muted)">${new Date(p.data).toLocaleDateString('pt-BR')}</span>
+        <span>${statusBadge(p.status)}</span>
+      </div>`).join('');
+  }
+
+  // Atualiza status dos pedidos via API
+  async function atualizarStatus() {
+    if (pedidos.length === 0) return;
+    for (const pedido of pedidos) {
+      if (pedido.status === 'Processando' && pedido.id) {
+        try {
+          const res = await fetch(SMM_API_URL, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+            body: new URLSearchParams({key: SMM_API_KEY, action: 'status', order: pedido.id})
+          });
+          const data = await res.json();
+          if (data.status) pedido.status = data.status === 'Completed' ? 'Concluído' : data.status === 'Canceled' ? 'Cancelado' : 'Processando';
+        } catch(e) {}
+      }
+    }
+    usuario.pedidos = pedidos;
+    localStorage.setItem('usuarioLogado', JSON.stringify(usuario));
+  }
+
+  atualizarStatus();
+
+  function logout() {
+    localStorage.removeItem('usuarioLogado');
+    window.location.href = 'index.html';
+  }
+</script>
+
+</body>
+</html>
