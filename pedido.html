@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Novo Pedido — Fonte das Influencers</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <style>
+    :root{
+      --bg:#0d0f14;--bg2:#13161e;--bg3:#1a1d27;--border:#252836;
+      --text:#e8eaf0;--muted:#8890a4;--accent:#25d366;--accent2:#1abe57;
+      --card:#161923;--input-bg:#1e2130;
+    }
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+
+```
+/* NAV */
+nav{background:var(--bg2);border-bottom:1px solid var(--border);padding:0 20px;height:60px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.logo{font-family:'Syne',sans-serif;font-weight:800;font-size:1.15rem;color:var(--accent);text-decoration:none}
+.logo span{color:var(--text)}
+.saldo-badge{background:var(--bg3);border:1px solid var(--accent);border-radius:99px;padding:5px 14px;font-size:.82rem;font-weight:700;color:var(--accent)}
+.btn-sair{background:none;border:1px solid var(--border);border-radius:8px;padding:5px 12px;font-size:.8rem;color:var(--muted);cursor:pointer;font-family:'DM Sans',sans-serif}
+
+main{max-width:580px;margin:0 auto;padding:24px 16px 100px}
+h1{font-family:'Syne',sans-serif;font-size:1.3rem;font-weight:800;margin-bottom:20px}
+h1 span{color:var(--accent)}
+
+/* PLATAFORMAS */
+.plataformas{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:24px}
+.plat-btn{background:var(--card);border:2px solid var(--border);border-radius:14px;padding:12px 6px;display:flex;flex-direction:column;align-items:center;gap:5px;cursor:pointer;transition:all .2s;user-select:none}
+.plat-btn:hover,.plat-btn.active{border-color:var(--accent);background:rgba(37,211,102,.07)}
+.plat-icon{font-size:1.6rem;line-height:1}
+.plat-name{font-size:.62rem;font-weight:700;color:var(--muted);text-align:center}
+.plat-btn.active .plat-name{color:var(--accent)}
+
+/* CARD */
+.card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:20px;margin-bottom:14px}
+
+/* SEARCH */
+.search-wrap{position:relative;margin-bottom:20px}
+.search-wrap input{width:100%;background:var(--input-bg);border:1px solid var(--border);border-radius:10px;padding:11px 14px 11px 40px;font-size:.9rem;color:var(--text);font-family:'DM Sans',sans-serif;outline:none;transition:border-color .2s}
+.search-wrap input:focus{border-color:var(--accent)}
+.search-wrap::before{content:'🔍';position:absolute;left:12px;top:50%;transform:translateY(-50%);font-size:.9rem}
+.search-wrap input::placeholder{color:var(--muted)}
+
+/* FORM */
+.form-group{margin-bottom:14px}
+.form-group label{display:block;font-size:.8rem;font-weight:700;color:var(--muted);margin-bottom:5px;text-transform:uppercase;letter-spacing:.5px}
+.form-group select,.form-group input,.form-group textarea{width:100%;background:var(--input-bg);border:1px solid var(--border);border-radius:10px;padding:11px 14px;font-size:.9rem;color:var(--text);font-family:'DM Sans',sans-serif;outline:none;transition:border-color .2s}
+.form-group select:focus,.form-group input:focus{border-color:var(--accent)}
+.form-group select{cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%238890a4' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center}
+.form-group select option{background:var(--bg2)}
+.form-group textarea{resize:none;height:90px;font-size:.82rem;color:var(--muted);cursor:default}
+
+/* DESCRICAO */
+.desc-box{background:rgba(37,211,102,.06);border:1px solid rgba(37,211,102,.2);border-radius:10px;padding:12px 14px;font-size:.82rem;color:var(--muted);line-height:1.6;margin-bottom:14px;display:none}
+.desc-box.show{display:block}
+.desc-box strong{color:var(--accent);display:block;margin-bottom:4px}
+
+/* INFO ROW */
+.info-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px}
+.info-item{background:var(--bg3);border-radius:10px;padding:12px 14px}
+.info-item .label{font-size:.72rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px}
+.info-item .value{font-family:'Syne',sans-serif;font-size:.95rem;font-weight:700;color:var(--text)}
+.info-item .value.green{color:var(--accent)}
+
+/* VALOR */
+.valor-card{background:linear-gradient(135deg,rgba(37,211,102,.12),rgba(26,190,87,.06));border:1px solid rgba(37,211,102,.3);border-radius:14px;padding:18px 20px;margin-bottom:20px;display:flex;justify-content:space-between;align-items:center}
+.valor-label{font-size:.8rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.5px}
+.valor-num{font-family:'Syne',sans-serif;font-size:1.8rem;font-weight:800;color:var(--accent)}
+
+/* BTN */
+.btn-enviar{width:100%;background:var(--accent);color:#fff;border:none;border-radius:12px;padding:15px;font-size:1.05rem;font-weight:800;font-family:'Syne',sans-serif;cursor:pointer;transition:background .2s,transform .15s;letter-spacing:.3px}
+.btn-enviar:hover{background:var(--accent2);transform:translateY(-1px)}
+.btn-enviar:disabled{background:var(--border);cursor:not-allowed;transform:none}
+
+/* ALERT */
+.alert{border-radius:10px;padding:12px 16px;font-size:.875rem;margin-bottom:16px;display:none}
+.alert.success{background:rgba(37,211,102,.1);border:1px solid var(--accent);color:var(--accent)}
+.alert.error{background:rgba(239,68,68,.1);border:1px solid #ef4444;color:#ef4444}
+
+/* LOADING */
+.loading-services{text-align:center;padding:20px;color:var(--muted);font-size:.85rem}
+.spinner{width:20px;height:20px;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite;display:inline-block;margin-right:8px;vertical-align:middle}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* WA BTN */
+.wa-float{position:fixed;bottom:24px;right:20px;width:52px;height:52px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(37,211,102,.4);z-index:999;text-decoration:none;transition:transform .2s}
+.wa-float:hover{transform:scale(1.1)}
+
+@media(max-width:400px){.plataformas{grid-template-columns:repeat(4,1fr)}.info-row{grid-template-columns:1fr 1fr}}
+```
+
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="logo">Fonte das <span>Influencers</span></a>
+  <div style="display:flex;gap:10px;align-items:center">
+    <span class="saldo-badge">💰 R$ <span id="saldoNav">0,00</span></span>
+    <button class="btn-sair" onclick="logout()">Sair</button>
+  </div>
+</nav>
+
+<main>
+  <h1>Fazer <span>Pedido</span></h1>
+
+  <div class="alert" id="alert"></div>
+
+  <!-- PLATAFORMAS -->
+
+  <div class="plataformas" id="plataformas">
+    <div class="plat-btn active" data-plat="todos">
+      <div class="plat-icon">⭐</div>
+      <span>Todos</span>
+    </div>
+    <div class="plat-btn" data-plat="instagram">
+      <div class="plat-icon">📸</div>
+      <span>Instagram</span>
+    </div>
+    <div class="plat-btn" data-plat="tiktok">
+      <div class="plat-icon">🎵</div>
+      <span>TikTok</span>
+    </div>
+    <div class="plat-btn" data-plat="facebook">
+      <div class="plat-icon">📘</div>
+      <span>Facebook</span>
+    </div>
+    <div class="plat-btn" data-plat="youtube">
+      <div class="plat-icon">▶️</div>
+      <span>YouTube</span>
+    </div>
+    <div class="plat-btn" data-plat="twitter">
+      <div class="plat-icon">🐦</div>
+      <span>Twitter/X</span>
+    </div>
+    <div class="plat-btn" data-plat="telegram">
+      <div class="plat-icon">✈️</div>
+      <span>Telegram</span>
+    </div>
+    <div class="plat-btn" data-plat="twitch">
+      <div class="plat-icon">🟣</div>
+      <span>Twitch</span>
+    </div>
+  </div>
+
+  <!-- BUSCA -->
+
+  <div class="search-wrap">
+    <input type="text" id="searchInput" placeholder="Procurar serviço..."/>
+  </div>
+
+  <!-- CARD PEDIDO -->
+
+  <div class="card">
+    <div class="form-group">
+      <label>Categoria</label>
+      <select id="categoriaSelect">
+        <option value="">Selecione uma categoria...</option>
+      </select>
+    </div>
+
+```
+<div class="form-group">
+  <label>Serviço</label>
+  <select id="servicoSelect" disabled>
+    <option value="">Selecione um serviço...</option>
+  </select>
+</div>
+
+<!-- DESCRIÇÃO -->
+<div class="desc-box" id="descBox">
+  <strong>📋 Descrição do Serviço</strong>
+  <span id="descTexto"></span>
+</div>
+
+<!-- INFO MIN/MAX/TEMPO -->
+<div class="info-row" id="infoRow" style="display:none">
+  <div class="info-item">
+    <div class="label">Mínimo</div>
+    <div class="value" id="infoMin">-</div>
+  </div>
+  <div class="info-item">
+    <div class="label">Máximo</div>
+    <div class="value" id="infoMax">-</div>
+  </div>
+  <div class="info-item">
+    <div class="label">Tempo médio</div>
+    <div class="value" id="infoTempo">-</div>
+  </div>
+  <div class="info-item">
+    <div class="label">Preço / 1000</div>
+    <div class="value green" id="infoPreco">-</div>
+  </div>
+</div>
+
+<div class="form-group">
+  <label>Link / URL</label>
+  <input type="url" id="linkInput" placeholder="https://instagram.com/seuperfil"/>
+</div>
+
+<div class="form-group">
+  <label>Quantidade</label>
+  <input type="number" id="qtdInput" placeholder="Ex: 1000" min="1"/>
+</div>
+```
+
+  </div>
+
+  <!-- VALOR -->
+
+  <div class="valor-card" id="valorCard" style="display:none">
+    <div>
+      <div class="valor-label">Valor total</div>
+      <div class="valor-num">R$ <span id="valorTotal">0,00</span></div>
+    </div>
+    <div style="text-align:right">
+      <div class="valor-label">Quantidade</div>
+      <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:1rem" id="valorQtd">0</div>
+    </div>
+  </div>
+
+<button class="btn-enviar" id="btnEnviar" disabled>Enviar Pedido</button>
+
+</main>
+
+<!-- WhatsApp -->
+
+<a href="https://wa.me/5511920890323?text=Olá! Preciso de suporte na Fonte das Influencers." target="_blank" class="wa-float">
+  <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="white">
+    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
+    <path d="M12 0C5.373 0 0 5.373 0 12c0 2.125.558 4.126 1.535 5.862L0 24l6.335-1.502A11.94 11.94 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.818 9.818 0 0 1-5.006-1.371l-.36-.214-3.733.885.934-3.613-.235-.372A9.818 9.818 0 0 1 2.182 12C2.182 6.57 6.57 2.182 12 2.182S21.818 6.57 21.818 12 17.43 21.818 12 21.818z"/>
+  </svg>
+</a>
+
+<script>
+  const SMM_API_URL = 'https://wassmm.online/api/v2';
+  const SMM_API_KEY = '6bb34f22f08fecf6baec4f6357175ffb';
+  const MARGEM = 1.0577;
+
+  // Verifica login
+  const usuario = JSON.parse(localStorage.getItem('usuarioLogado') || 'null');
+  if (!usuario) window.location.href = 'index.html';
+  document.getElementById('saldoNav').textContent = (usuario?.saldo || 0).toFixed(2).replace('.',',');
+
+  let todosServicos = [];
+  let servicoAtual = null;
+  let platAtual = 'todos';
+
+  // Plataformas
+  function getPlatKey(name) {
+    const n = (name||'').toLowerCase();
+    if(n.includes('instagram')) return 'instagram';
+    if(n.includes('tiktok')) return 'tiktok';
+    if(n.includes('facebook')) return 'facebook';
+    if(n.includes('youtube')) return 'youtube';
+    if(n.includes('twitter')||n.includes(' x ')) return 'twitter';
+    if(n.includes('telegram')) return 'telegram';
+    if(n.includes('twitch')) return 'twitch';
+    if(n.includes('spotify')) return 'spotify';
+    return 'outros';
+  }
+
+  // Carrega serviços
+  async function carregarServicos() {
+    const catSelect = document.getElementById('categoriaSelect');
+    catSelect.innerHTML = '<option value="">⏳ Carregando...</option>';
+    try {
+      const res = await fetch(SMM_API_URL, {
+        method: 'POST',
+        headers: {'Content-Type':'application/x-www-form-urlencoded'},
+        body: new URLSearchParams({key: SMM_API_KEY, action: 'services'})
+      });
+      const data = await res.json();
+      todosServicos = data.map(s => ({
+        ...s,
+        rate: (parseFloat(s.rate) * MARGEM).toFixed(4),
+        platKey: getPlatKey(s.name + ' ' + (s.category||''))
+      }));
+      popularCategorias();
+    } catch(e) {
+      // Serviços de exemplo
+      todosServicos = [
+        {service:'1001',name:'Instagram - Seguidores Brasileiros',category:'Instagram Seguidores',rate:(0.50*MARGEM).toFixed(4),min:'100',max:'10000',platKey:'instagram'},
+        {service:'1002',name:'Instagram - Curtidas Reais',category:'Instagram Curtidas',rate:(0.20*MARGEM).toFixed(4),min:'50',max:'5000',platKey:'instagram'},
+        {service:'1003',name:'TikTok - Seguidores',category:'TikTok Seguidores',rate:(0.40*MARGEM).toFixed(4),min:'100',max:'10000',platKey:'tiktok'},
+        {service:'1004',name:'YouTube - Visualizações',category:'YouTube Views',rate:(0.30*MARGEM).toFixed(4),min:'500',max:'50000',platKey:'youtube'},
+        {service:'1005',name:'Facebook - Curtidas',category:'Facebook Curtidas',rate:(0.35*MARGEM).toFixed(4),min:'100',max:'5000',platKey:'facebook'},
+        {service:'1006',name:'Twitter/X - Seguidores',category:'Twitter Seguidores',rate:(0.45*MARGEM).toFixed(4),min:'100',max:'10000',platKey:'twitter'},
+      ];
+      popularCategorias();
+    }
+  }
+
+  function servicosFiltrados() {
+    const busca = document.getElementById('searchInput').value.toLowerCase();
+    return todosServicos.filter(s => {
+      const platOk = platAtual === 'todos' || s.platKey === platAtual;
+      const buscaOk = !busca || s.name.toLowerCase().includes(busca) || (s.category||'').toLowerCase().includes(busca);
+      return platOk && buscaOk;
+    });
+  }
+
+  function popularCategorias() {
+    const filtrados = servicosFiltrados();
+    const cats = [...new Set(filtrados.map(s => s.category||'Geral'))].sort();
+    const catSelect = document.getElementById('categoriaSelect');
+    catSelect.innerHTML = '<option value="">Selecione uma categoria...</option>' +
+      cats.map(c => `<option value="${c}">${c}</option>`).join('');
+    document.getElementById('servicoSelect').innerHTML = '<option value="">Selecione um serviço...</option>';
+    document.getElementById('servicoSelect').disabled = true;
+    esconderInfo();
+  }
+
+  function popularServicos(categoria) {
+    const filtrados = servicosFiltrados().filter(s => (s.category||'Geral') === categoria);
+    const svcSelect = document.getElementById('servicoSelect');
+    svcSelect.innerHTML = '<option value="">Selecione um serviço...</option>' +
+      filtrados.map(s => `<option value="${s.service}">#${s.service} - ${s.name}</option>`).join('');
+    svcSelect.disabled = false;
+    esconderInfo();
+  }
+
+  function mostrarInfo(s) {
+    servicoAtual = s;
+    document.getElementById('infoMin').textContent = Number(s.min).toLocaleString();
+    document.getElementById('infoMax').textContent = Number(s.max).toLocaleString();
+    document.getElementById('infoTempo').textContent = '0-60 min';
+    document.getElementById('infoPreco').textContent = 'R$ ' + parseFloat(s.rate).toFixed(4);
+    document.getElementById('infoRow').style.display = 'grid';
+
+    if(s.description) {
+      document.getElementById('descTexto').textContent = s.description;
+      document.getElementById('descBox').classList.add('show');
+    } else {
+      document.getElementById('descBox').classList.remove('show');
+    }
+
+    document.getElementById('qtdInput').min = s.min;
+    document.getElementById('qtdInput').max = s.max;
+    document.getElementById('qtdInput').placeholder = `Mín ${Number(s.min).toLocaleString()} — Máx ${Number(s.max).toLocaleString()}`;
+    calcularValor();
+  }
+
+  function esconderInfo() {
+    servicoAtual = null;
+    document.getElementById('infoRow').style.display = 'none';
+    document.getElementById('descBox').classList.remove('show');
+    document.getElementById('valorCard').style.display = 'none';
+    document.getElementById('btnEnviar').disabled = true;
+  }
+
+  function calcularValor() {
+    const qtd = parseInt(document.getElementById('qtdInput').value) || 0;
+    if (!qtd || !servicoAtual) { document.getElementById('valorCard').style.display='none'; return; }
+    const total = (qtd / 1000 * parseFloat(servicoAtual.rate)).toFixed(2);
+    document.getElementById('valorTotal').textContent = total.replace('.',',');
+    document.getElementById('valorQtd').textContent = qtd.toLocaleString();
+    document.getElementById('valorCard').style.display = 'flex';
+    const link = document.getElementById('linkInput').value.trim();
+    document.getElementById('btnEnviar').disabled = !link;
+  }
+
+  function showAlert(msg, type='success') {
+    const el = document.getElementById('alert');
+    el.textContent = msg;
+    el.className = 'alert ' + type;
+    el.style.display = 'block';
+    window.scrollTo(0,0);
+    setTimeout(() => el.style.display='none', 5000);
+  }
+
+  // EVENTOS
+  document.querySelectorAll('.plat-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+      document.querySelectorAll('.plat-btn').forEach(b => b.classList.remove('active'));
+      this.classList.add('active');
+      platAtual = this.dataset.plat;
+      popularCategorias();
+    });
+  });
+
+  document.getElementById('searchInput').addEventListener('input', popularCategorias);
+
+  document.getElementById('categoriaSelect').addEventListener('change', function() {
+    if (this.value) popularServicos(this.value);
+    else { document.getElementById('servicoSelect').innerHTML='<option value="">Selecione um serviço...</option>'; document.getElementById('servicoSelect').disabled=true; esconderInfo(); }
+  });
+
+  document.getElementById('servicoSelect').addEventListener('change', function() {
+    const s = todosServicos.find(x => String(x.service) === this.value);
+    if (s) mostrarInfo(s);
+    else esconderInfo();
+  });
+
+  document.getElementById('qtdInput').addEventListener('input', calcularValor);
+  document.getElementById('linkInput').addEventListener('input', calcularValor);
+
+  document.getElementById('btnEnviar').addEventListener('click', async function() {
+    const link = document.getElementById('linkInput').value.trim();
+    const qtd  = parseInt(document.getElementById('qtdInput').value);
+    if (!link || !qtd || !servicoAtual) return showAlert('Preencha todos os campos.', 'error');
+    if (qtd < parseInt(servicoAtual.min)) return showAlert(`Quantidade mínima: ${servicoAtual.min}`, 'error');
+    if (qtd > parseInt(servicoAtual.max)) return showAlert(`Quantidade máxima: ${servicoAtual.max}`, 'error');
+
+    this.textContent = '⏳ Enviando...';
+    this.disabled = true;
+
+    try {
+      const qtdReal = Math.floor(qtd * 0.9423);
+      const res = await fetch(SMM_API_URL, {
+        method: 'POST',
+        headers: {'Content-Type':'application/x-www-form-urlencoded'},
+        body: new URLSearchParams({key: SMM_API_KEY, action:'add', service: servicoAtual.service, link, quantity: qtdReal})
+      });
+      const data = await res.json();
+      const pedido = {id: data.order||Date.now(), service: servicoAtual.service, nome: servicoAtual.name, link, quantidade: qtd, status:'Processando', data: new Date().toISOString()};
+      usuario.pedidos = usuario.pedidos||[];
+      usuario.pedidos.push(pedido);
+      localStorage.setItem('usuarioLogado', JSON.stringify(usuario));
+      const usuarios = JSON.parse(localStorage.getItem('usuarios')||'[]');
+      const idx = usuarios.findIndex(u => u.username===usuario.username);
+      if(idx>-1){usuarios[idx]=usuario;localStorage.setItem('usuarios',JSON.stringify(usuarios));}
+      showAlert('✅ Pedido #' + pedido.id + ' enviado com sucesso!');
+      document.getElementById('linkInput').value='';
+      document.getElementById('qtdInput').value='';
+      document.getElementById('valorCard').style.display='none';
+      this.textContent='Enviar Pedido';
+      this.disabled=false;
+    } catch(e) {
+      showAlert('Erro ao enviar pedido. Tente novamente.','error');
+      this.textContent='Enviar Pedido';
+      this.disabled=false;
+    }
+  });
+
+  function logout() {
+    localStorage.removeItem('usuarioLogado');
+    window.location.href='index.html';
+  }
+
+  carregarServicos();
+</script>
+
+</body>
+</html>
